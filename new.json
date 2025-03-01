@@ -1,0 +1,29 @@
+{
+  "id": "1-4360@10.0.2.15",
+  "can_listen": true, // убрать
+  "can_record": true,
+  "date": "2025-02-19T09:16:14.577545482Z",
+  "Incoming": "bool",
+  "participants": [
+    {
+      "clinet": "bool",
+      "number": "",
+      "name": "",
+      "group": ""
+    },
+    {
+      "clinet": "bool",
+      "number": "",
+      "name": "",
+      "group": ""
+    }
+  ],
+  "participants_count": "+2",
+  "status": "success",
+  "stream_url": "string",
+  "rtp-urls": [ // убрать
+    "rtp://10.90.26.11:0",
+    "rtp://10.90.26.11:0"
+  ],
+  "duration": "03:58"
+}
