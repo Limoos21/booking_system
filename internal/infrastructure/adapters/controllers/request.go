@@ -19,3 +19,14 @@ type updateReservationRequest struct {
 	Contacts contactsRequest `json:"contacts"`
 	Capacity int             `json:"capacity"`
 }
+
+type updateUserData struct {
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
+}
+
+type userRequestRegisterTest struct {
+	Phone    string `json:"phone"`
+	Name     string `json:"name"`
+	Telegram int64  `json:"telegram"`
+}

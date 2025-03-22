@@ -15,4 +15,6 @@ type IUseCase interface {
 	GetReservationForId(reservationId string) (dto.ReservationDTO, error)
 	UpdateReservation(dto dto.ReservationDTO) (bool, error)
 	GetTableForReservationDate(date time.Time, restaurantId string) ([]dto.AvaibleTableDTO, error)
+	UpdateUser(userDto dto.UserDTO, userId string) (bool, error)
+	GetUserForId(userId string) (dto.UserDTO, error)
 }

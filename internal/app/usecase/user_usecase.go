@@ -33,6 +33,26 @@ func New(storage ports.IStorage, logger *slog.Logger, t string, jwt *middelware.
 	}
 }
 
+func (u UserService) UpdateUser(userDto dto.UserDTO, userId string) (bool, error) {
+	userDto.ID = userId
+	domainUser := toUserDomain(&userDto)
+	ok, err := u.storage.UpdateUser(*domainUser)
+	if err != nil {
+		return false, err
+	}
+	return ok, nil
+
+}
+
+func (u UserService) GetUserForId(userId string) (dto.UserDTO, error) {
+	user, err := u.storage.GetUserForId(userId)
+	if err != nil {
+		return dto.UserDTO{}, err
+	}
+	dtoUser := fromUserDomain(user)
+	return *dtoUser, nil
+}
+
 func (u UserService) AuthUser(dto dto.UserDTO) (dto.UserDTO, string, error) {
 	ok, user, err := u.storage.CheckUserForTelegram(dto.TelegramID)
 	if err != nil {

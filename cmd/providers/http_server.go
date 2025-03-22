@@ -2,11 +2,14 @@ package providers
 
 import (
 	"booking_system/cmd/providers/middelware"
+	_ "booking_system/docs"
 	"booking_system/internal/app/ports"
 	"booking_system/internal/infrastructure/adapters/routers"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log/slog"
 )
 
@@ -42,7 +45,11 @@ func NewHTTPServer(port int, logLvl string, controllers ports.IController) *HTTP
 }
 
 func (s *HTTPServer) Run(logger *slog.Logger, jwt *middelware.Jwt) error {
+
+	s.Server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	routers.New(s.Server, logger, s.controllers, jwt)
+
 	err := s.Server.Run(fmt.Sprintf(":%d", s.port))
 	if err != nil {
 		return err

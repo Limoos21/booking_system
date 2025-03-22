@@ -18,11 +18,11 @@ func New(server *gin.Engine, logger *slog.Logger, controllers ports.IController,
 		controllers: controllers,
 	}
 	r := server.Group("api/v1")
-
+	r.POST("/auth/test", rout.AuthTest)
 	// Роуты, связанные с аутентификацией и пользователем
 	r.GET("/auth/telegram", rout.Auth)
-	r.PATCH("/me", rout.UpdateInfo)
-	r.GET("/me", rout.GetUser)
+	r.PATCH("/me", jwt.JwtMiddleware(), rout.UpdateUserInfo)
+	r.GET("/me", jwt.JwtMiddleware(), rout.GetUser)
 	// Роуты, связанные с бронированиями пользователя
 	r.GET("/booking/me", jwt.JwtMiddleware(), rout.GetUserBooking)
 	r.GET("/booking/me/:date", jwt.JwtMiddleware(), rout.GetUserBooking)
@@ -34,8 +34,20 @@ func New(server *gin.Engine, logger *slog.Logger, controllers ports.IController,
 
 	// Роуты для работы с бронированиями в ресторанах
 	r.POST("/:restaurantId/booking", jwt.JwtMiddleware(), rout.CreateBooking)
-	r.GET("/:restaurantId/bookings/:date", rout.GetBookingDate)
+	r.GET("/:restaurantId/bookings/:date", rout.GetUserBookingsDate)
 
+}
+
+func (r Router) AuthTest(c *gin.Context) {
+	r.controllers.AuthTest(c)
+}
+
+func (r Router) GetUser(c *gin.Context) {
+	r.controllers.GetUserInfo(c)
+}
+
+func (r Router) UpdateUserInfo(c *gin.Context) {
+	r.controllers.UpdateUserInfo(c)
 }
 
 func (r Router) UpdateStatus(c *gin.Context) {
@@ -47,16 +59,15 @@ func (r Router) Auth(c *gin.Context) {
 }
 
 func (r Router) GetBooking(c *gin.Context) {
+	r.controllers.GetBooking(c)
+}
 
+func (r Router) GetUserBookingsDate(c *gin.Context) {
+	r.controllers.GetUserBookingsDate(c)
 }
 
 func (r Router) GetUserBooking(c *gin.Context) {
-	date := c.Param("date")
-	if date == "" {
-		r.controllers.GetUserBookings(c)
-	} else {
-		r.controllers.GetUserBookingsDate(c)
-	}
+	r.controllers.GetUserBookings(c)
 
 }
 

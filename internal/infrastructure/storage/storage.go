@@ -21,6 +21,18 @@ func New(logger *slog.Logger, db *gorm.DB) *Storage {
 	}
 }
 
+// UpdateUser обновляет данные пользователя.
+func (s *Storage) UpdateUser(user domain.User) (bool, error) {
+	userModel := models.ConvertUserToModel(&user)
+	result := s.Database.Save(userModel)
+	if result.Error != nil {
+		s.logger.Error("Failed to update user", "error", result.Error)
+		return false, result.Error
+	}
+	s.logger.Info("User updated successfully", "userId", userModel.ID)
+	return true, nil
+}
+
 // GetTablesWithAvailability возвращает все столы с пометками о их доступности на конкретную дату и время.
 func (s *Storage) GetTablesWithAvailability(restaurantID string, dateTime time.Time) ([]domain.TableAvailability, error) {
 	var tables []models.Table
@@ -124,9 +136,9 @@ func (s *Storage) IsTableAvailable(tableID string, startTime, endTime time.Time)
 	return count == 0, nil
 }
 
-func (s *Storage) GetUserForId(user domain.User) (*domain.User, error) {
+func (s *Storage) GetUserForId(userUid string) (*domain.User, error) {
 	var dbUser models.User
-	result := s.Database.First(&dbUser, user.ID)
+	result := s.Database.First(&dbUser, userUid)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil // Пользователь не найден

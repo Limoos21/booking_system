@@ -13,7 +13,7 @@ type IStorage interface {
 	//CheckUserForTelegram проверка существования пользвоателя по telegramId
 	CheckUserForTelegram(telegramId int64) (bool, domain.User, error)
 	// GetUserForId получение пользователя по Id
-	GetUserForId(user domain.User) (*domain.User, error)
+	GetUserForId(userUid string) (*domain.User, error)
 	// GetReservationForId получение резервации (бронирования) по Id
 	GetReservationForId(id string) (*domain.Reservation, error)
 	// CreateReservation создание резервации(бронирования), возвращает id созданной резервации
@@ -27,4 +27,5 @@ type IStorage interface {
 	// UpdateReservation обноваление резервации
 	UpdateReservation(reservation *domain.Reservation) (bool, error)
 	GetTablesWithAvailability(restaurantID string, dateTime time.Time) ([]domain.TableAvailability, error)
+	UpdateUser(user domain.User) (bool, error)
 }

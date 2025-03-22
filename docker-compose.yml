@@ -15,8 +15,17 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - devops_test-service
-
+      - service
+  backend:
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - service
+    depends_on:
+      - database
 networks:
-  devops_test-service:
-    name: devops_test-service
+  service:
